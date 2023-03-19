@@ -24,4 +24,4 @@
 * Create a ```.env``` file in the directory and input:
   * ```TOKEN="<YOUR_TOKEN_HERE>"```
 * Run ```main.py``` using ```python main.py```
-* You're done. ![Pig](https://i.imgur.com/5x1Rw1V.png)
+* You're done! ![Pig](https://i.imgur.com/5x1Rw1V.png)
