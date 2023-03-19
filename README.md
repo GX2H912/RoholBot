@@ -8,9 +8,9 @@
 * Coded in Python.
 * Coded with the intention of humor.
 
-| Uses                                   | Applications | Purpose                             |
-|----------------------------------------|--------------|-------------------------------------|
-| Display Rohol's **Courageous** Quotes. | Therapy.     | Impress Unsuspecting Teenage Girls. |
+| Uses                                   | Applications | Purpose     |
+|----------------------------------------|--------------|-------------|
+| Display Rohol's **Courageous** Quotes. | Therapy.     | To impress. |
 
 ## Setup and Prerequisites:
 * Install Python.
@@ -24,4 +24,4 @@
 * Create a ```.env``` file in the directory and input:
   * ```TOKEN="<YOUR_TOKEN_HERE>"```
 * Run ```main.py``` using ```python main.py```
-* You're done! ![Pig](https://i.imgur.com/5x1Rw1V.png)
+* You're done!
