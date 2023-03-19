@@ -1,8 +1,11 @@
+import json
 import os
 import random
 from datetime import datetime
+from typing import Optional
 
 import discord
+import openai
 from discord.commands import Option
 from discord.ext import commands
 from dotenv import load_dotenv
@@ -28,7 +31,7 @@ class Embed:
             text=f'Copyright {datetime.now().year} RoholWorks Inc. • {datetime.now().strftime("%m/%d/%Y")}')
         return self.embed
 
-    def with_fields(self, fields) -> list[discord.Embed]:
+    def with_fields(self, fields) -> Optional[list[discord.Embed]]:
         self.embeds = []
         for index, (name, value) in enumerate(fields):
             if not self.embeds:
@@ -80,6 +83,35 @@ async def rohol_qotd(ctx: discord.context, show: Option(bool, 'Show quote(s) in 
     embeds = Embed(f'The {adjective()} Rohol Quote{"s" if n > 1 else ""} of {date}', None).with_fields(fields)
     for embed in embeds:
         await ctx.respond(embed=embed, ephemeral=(False if show else True))
+
+
+@bot.slash_command(
+    name='ask_rohol',
+    description='Ask Rohol AI'
+)
+async def ask_rohol(
+        ctx: discord.context, request: Option(str, 'Input prompt', required=True)
+) -> None:
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    await ctx.defer(ephemeral=True)
+    response = openai.Completion.create(
+        model="text-davinci-003",
+        prompt=request,
+        temperature=0.7,
+        max_tokens=200,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0
+    )
+    output = None
+    for item, content in response.items():
+        if item != 'choices':
+            continue
+        content = str(content)
+        output = json.loads(content[content.find('{'):-1])['text']
+    field = [['Request', output]]
+    embed = Embed('Rohol AI', 'The answer to your prompt:').with_fields(field)
+    await ctx.respond(embed=embed[0], ephemeral=True)
 
 
 if __name__ == '__main__':
