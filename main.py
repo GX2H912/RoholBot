@@ -76,7 +76,7 @@ async def rohol_qotd(ctx: discord.context, show: Option(bool, 'Show quote(s) in 
 
     await ctx.defer(ephemeral=(False if show else True))
     fields = ([f'The \'{adjective()}\' Rohol Quote{" (" + str(i + 1) + ")" if n > 1 else ""}:\n',
-        f'{get_quote()}\n-Brent Rohol {date}'] for i in range(n))
+               f'{get_quote()}\n-Brent Rohol {date}'] for i in range(n))
     embeds = Embed(f'The {adjective()} Rohol Quote{"s" if n > 1 else ""} of {date}', None).with_fields(fields)
     for embed in embeds:
         await ctx.respond(embed=embed, ephemeral=(False if show else True))
