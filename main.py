@@ -5,6 +5,7 @@ from datetime import datetime
 from typing import Optional
 
 import discord
+from math import ceil
 import openai
 from discord.commands import Option
 from discord.ext import commands
@@ -98,7 +99,7 @@ async def ask_rohol(
         model="text-davinci-003",
         prompt=request,
         temperature=0.7,
-        max_tokens=200,
+        max_tokens=600,
         top_p=1,
         frequency_penalty=0,
         presence_penalty=0
@@ -109,8 +110,16 @@ async def ask_rohol(
             continue
         content = str(content)
         output = json.loads(content[content.find('{'):-1])['text']
-    field = [['Request', output]]
-    embed = Embed('Rohol AI', 'The answer to your prompt:').with_fields(field)
+    output_list = []
+    op = list(range(0, len(output), 1024))
+    for i, n in enumerate(op):
+        if i+1 < len(op):
+            out = output[n:op[i+1]]
+        else:
+            out = output[n:len(output)]
+        output_list.append(out)
+    fields = [[f'Request ({n+1})', text] for n, text in enumerate(output_list)]
+    embed = Embed('Rohol AI', f'The answer to your prompt: "{request}"').with_fields(fields)
     await ctx.respond(embed=embed[0], ephemeral=True)
 
 
