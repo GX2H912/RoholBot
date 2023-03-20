@@ -5,7 +5,6 @@ from datetime import datetime
 from typing import Optional
 
 import discord
-from math import ceil
 import openai
 from discord.commands import Option
 from discord.ext import commands
@@ -113,12 +112,12 @@ async def ask_rohol(
     output_list = []
     op = list(range(0, len(output), 1024))
     for i, n in enumerate(op):
-        if i+1 < len(op):
-            out = output[n:op[i+1]]
+        if i + 1 < len(op):
+            out = output[n:op[i + 1]]
         else:
             out = output[n:len(output)]
         output_list.append(out)
-    fields = [[f'Request ({n+1})', text] for n, text in enumerate(output_list)]
+    fields = [[f'Request ({n + 1})', text] for n, text in enumerate(output_list)]
     embed = Embed('Rohol AI', f'The answer to your prompt: "{request}"').with_fields(fields)
     await ctx.respond(embed=embed[0], ephemeral=True)
 
