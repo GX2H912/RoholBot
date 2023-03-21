@@ -100,25 +100,21 @@ async def ask_rohol(
         temperature=0.7,
         max_tokens=600,
         top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
     )
-    output = None
-    for item, content in response.items():
-        if item != 'choices':
-            continue
-        content = str(content)
-        output = json.loads(content[content.find('{'):-1])['text']
+    output = response['choices'][0]['text']
     output_list = []
-    op = list(range(0, len(output), 1024))
+    op = list(range(0, len(output), 1021))
+    greater_than_one = len(op) > 1
     for i, n in enumerate(op):
+        affix = '...' if greater_than_one else ''
         if i + 1 < len(op):
-            out = output[n:op[i + 1]]
+            out = output[n:op[i + 1]].strip() + affix
         else:
-            out = output[n:len(output)]
+            out = affix + output[n:len(output)].strip()
         output_list.append(out)
-    fields = [[f'Request ({n + 1})', text] for n, text in enumerate(output_list)]
-    embed = Embed('Rohol AI', f'The answer to your prompt: "{request}"').with_fields(fields)
+    fields = [[f'{f"Response (Page {n + 1})" if len(op) > 1 else "Response"}', text] for n, text in
+              enumerate(output_list)]
+    embed = Embed('Rohol AI', f'The answer to your prompt:').with_fields(fields)
     await ctx.respond(embed=embed[0], ephemeral=True)
 
 
